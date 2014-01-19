@@ -12,12 +12,12 @@ namespace Royals
         {
             var game = new RoyalsGame();
 
-            do
+
+            foreach (var card in game.DeckView)
             {
-                game.Reset();
-                Console.WriteLine(game.DeckView.First());
-                Console.ReadKey();
-            } while (true);
+                Console.WriteLine(card);
+                Console.ReadKey(true);
+            }
         }
     }
 }

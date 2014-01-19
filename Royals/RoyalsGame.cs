@@ -45,7 +45,7 @@ namespace Royals
             // Loop over suits and values
             foreach (Suits suit in Enum.GetValues(typeof(Suits)).Cast<Suits>())
             {
-                for (int number = 1; number <= 13; number++)
+                for (int number = 2; number <= 14; number++)
                 {
                     Card card = new Card(suit, number);
 

@@ -9,7 +9,7 @@ namespace Royals
     enum Suits { Spades, Hearts, Diamonds, Clubs }
     internal struct Card
     {
-        // 1 - 13 for Ace - King
+        // 2 - 14 for Two - Ace
         internal readonly int Number;
         internal readonly Suits Suit;
         public string NumberString
@@ -18,14 +18,14 @@ namespace Royals
             {
                 switch (Number)
                 {
-                    case 1:
-                        return "Ace";
                     case 11:
                         return "Jack";
                     case 12:
                         return "Queen";
                     case 13:
                         return "King";
+                    case 14:
+                        return "Ace";
                     default:
                         return Number.ToString();
                 }
@@ -34,9 +34,9 @@ namespace Royals
 
         internal Card(Suits suit, int number)
         {
-            if (number > 13 || number < 1)
+            if (number > 14 || number < 2)
             {
-                throw new ArgumentOutOfRangeException("Number must be between 1 and 13, but instead was: " + number);
+                throw new ArgumentOutOfRangeException("Number must be between 2 and 14, but instead was: " + number);
             }
 
             Suit = suit;
