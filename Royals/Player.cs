@@ -10,10 +10,12 @@ namespace Royals
     {
         List<Card> Hand { get; set; }
         Suits? HomeSuit { get; set; }
+        int Score { get; set; }
 
         public Player()
         {
-            
+            Hand = new List<Card>();
+            Score = 0;
         }
         
     }

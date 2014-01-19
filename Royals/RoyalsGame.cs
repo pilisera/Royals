@@ -9,6 +9,11 @@ namespace Royals
 {
     internal class RoyalsGame
     {
+        // Always 10 cards in the initial deal
+        private const byte CARDS_PER_HAND = 10;
+        // Two players for the standard game, will be expanded to 3 and 4 for Marriage and Alliance Royals
+        private const byte NUMBER_OF_PLAYERS = 2;
+
         List<Card> Deck { get; set; }
         List<Player> Players { get; set; }
         public IReadOnlyCollection<Card> DeckView
@@ -21,6 +26,7 @@ namespace Royals
 
         private static Random RNG = new Random();
 
+        #region init
         internal RoyalsGame()
         {
             Reset();
@@ -30,11 +36,6 @@ namespace Royals
         {
             InitializeDeck();
             InitializePlayers();
-        }
-
-        internal void Start()
-        {
-
         }
 
         private void InitializeDeck()
@@ -67,10 +68,48 @@ namespace Royals
         {
             Players = new List<Player>();
 
-            // Two players for the standard game, will be expanded to 3 and 4 for Marriage and Alliance Royals
-            Players.Add(new Player());
-            Players.Add(new Player());
+            for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
+            {
+                Players.Add(new Player());
+            }
         }
+        #endregion
+
+        #region Play
+        internal void Start()
+        {
+            Deal();
+            ChooseHomeSuits();
+
+            bool HandContinues = true;
+            while (HandContinues)
+            {
+                HandContinues = TakeTurn();
+            }
+
+            AdjustScores();
+        }
+
+        private void Deal()
+        {
+
+        }
+
+        private void ChooseHomeSuits()
+        {
+
+        }
+
+        private bool TakeTurn()
+        {
+            return false;
+        }
+
+        private void AdjustScores()
+        {
+
+        }
+        #endregion
 
         private void ShuffleDeck()
         {
