@@ -14,13 +14,13 @@ namespace Royals
         // Two players for the standard game, will be expanded to 3 and 4 for Marriage and Alliance Royals
         private const byte NUMBER_OF_PLAYERS = 2;
 
-        List<Card> Deck { get; set; }
-        List<Player> Players { get; set; }
+        private Stack<Card> Deck { get; set; }
+        internal List<Player> Players { get; set; }
         public IReadOnlyCollection<Card> DeckView
         {
             get
             {
-                return new ReadOnlyCollection<Card>(Deck);
+                return new ReadOnlyCollection<Card>(Deck.ToList());
             }
         }
 
@@ -40,7 +40,7 @@ namespace Royals
 
         private void InitializeDeck()
         {
-            Deck = new List<Card>();
+            Deck = new Stack<Card>();
 
             // Loop over suits and values
             foreach (Suits suit in Enum.GetValues(typeof(Suits)).Cast<Suits>())
@@ -50,18 +50,16 @@ namespace Royals
                     Card card = new Card(suit, number);
 
                     // Add one copy for the Poker deck
-                    Deck.Add(card);
+                    Deck.Push(card);
 
                     // Add two copies for the Pinochle deck
                     if (number > 8)
                     {
-                        Deck.Add(card);
-                        Deck.Add(card);
+                        Deck.Push(card);
+                        Deck.Push(card);
                     }
                 }
             }
-
-            ShuffleDeck();
         }
 
         private void InitializePlayers()
@@ -70,7 +68,7 @@ namespace Royals
 
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
             {
-                Players.Add(new Player());
+                Players.Add(new HumanPlayer());
             }
         }
         #endregion
@@ -92,12 +90,20 @@ namespace Royals
 
         private void Deal()
         {
+            ShuffleDeck();
 
+            foreach (var player in Players)
+            {
+                player.Hand = new LinkedList<Card>(Deck.Take(CARDS_PER_HAND));
+            }
         }
 
         private void ChooseHomeSuits()
         {
-
+            foreach (var player in Players)
+            {
+                player.ChooseHomeSuit();
+            }
         }
 
         private bool TakeTurn()
@@ -113,14 +119,18 @@ namespace Royals
 
         private void ShuffleDeck()
         {
+            List<Card> d = Deck.ToList();
+
             // Fisher-Yates Shuffle
-            for (int currentIndex = Deck.Count - 1; currentIndex > 0; currentIndex--)
+            for (int currentIndex = d.Count - 1; currentIndex > 0; currentIndex--)
             {
                 int randomIndex = RNG.Next(currentIndex + 1);
-                Card swapValue = Deck[randomIndex];
-                Deck[randomIndex] = Deck[currentIndex];
-                Deck[currentIndex] = swapValue;
+                Card swapValue = d[randomIndex];
+                d[randomIndex] = d[currentIndex];
+                d[currentIndex] = swapValue;
             }
+
+            Deck = new Stack<Card>(d);
         }
     }
 }
