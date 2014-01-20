@@ -12,11 +12,14 @@ namespace Royals
         {
             var game = new RoyalsGame();
 
+            game.RunHand();
 
-            foreach (var card in game.DeckView)
+            foreach (var p in game.PlayerView)
             {
-                Console.WriteLine(card);
-                Console.ReadKey(true);
+                Console.WriteLine("Hand is: " + p.HandString);
+                Console.WriteLine("Score is: " + p.Score);
+
+                Console.ReadKey();
             }
         }
     }

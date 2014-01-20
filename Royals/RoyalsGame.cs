@@ -23,6 +23,13 @@ namespace Royals
                 return new ReadOnlyCollection<Card>(Deck.ToList());
             }
         }
+        public IReadOnlyCollection<Player> PlayerView
+        {
+            get
+            {
+                return new ReadOnlyCollection<Player>(Players);
+            }
+        }
 
         private static Random RNG = new Random();
 
@@ -74,15 +81,16 @@ namespace Royals
         #endregion
 
         #region Play
-        internal void Start()
+        internal void RunHand()
         {
             Deal();
             ChooseHomeSuits();
 
             bool HandContinues = true;
-            while (HandContinues)
+            for (int playerIndex = 0; HandContinues; playerIndex = playerIndex + 1 % NUMBER_OF_PLAYERS)
             {
-                HandContinues = TakeTurn();
+
+                HandContinues = TakeTurn(Players[playerIndex]);
             }
 
             AdjustScores();
@@ -94,26 +102,42 @@ namespace Royals
 
             foreach (var player in Players)
             {
-                player.Hand = new LinkedList<Card>(Deck.Take(CARDS_PER_HAND));
+
+                player.Hand = Draw(CARDS_PER_HAND);
             }
+        }
+
+        private LinkedList<Card> Draw(int numCards)
+        {
+            LinkedList<Card> cards = new LinkedList<Card>();
+            for (int i = 0; (i < numCards) && (Deck.Count() > 0); i++ )
+            {
+                cards.AddLast(Deck.Pop());
+            }
+            return cards;
         }
 
         private void ChooseHomeSuits()
         {
+            List<Suits> chosenSuits = new List<Suits>(NUMBER_OF_PLAYERS);
             foreach (var player in Players)
             {
-                player.ChooseHomeSuit();
+                Suits s = player.ChooseHomeSuit(chosenSuits);
+                chosenSuits.Add(s);
             }
         }
 
-        private bool TakeTurn()
+        private bool TakeTurn(Player p)
         {
             return false;
         }
 
         private void AdjustScores()
         {
-
+            foreach (var player in Players)
+            {
+                player.AdjustScore();
+            }
         }
         #endregion
 

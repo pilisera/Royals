@@ -9,8 +9,23 @@ namespace Royals
     enum Suits { Spades, Hearts, Diamonds, Clubs }
     internal struct Card
     {
+        #region constants
+        internal const int JACK = 11;
+        internal const int QUEEN = 12;
+        internal const int KING = 13;
+        internal const int ACE = 14;
+        #endregion
+
         // 2 - 14 for Two - Ace
         internal readonly int Number;
+        internal int PointValue
+        {
+            get
+            {
+                // 10 points for 9-Ace, 5 for 2-8
+                return Number >= 9 ? 10 : 5;
+            }
+        }
         internal readonly Suits Suit;
         public string NumberString
         {
@@ -43,9 +58,39 @@ namespace Royals
             Number = number;
         }
 
+        #region overrides
         public override string ToString()
         {
             return NumberString + " of " + Suit.ToString();
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Card)
+            {
+                var card = (Card)obj;
+                return card.Number == Number && card.Suit == Suit;
+            }
+            return false;
+        }
+
+        public static bool operator ==(Card lhs, Card rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(Card lhs, Card rhs)
+        {
+            return !(lhs.Equals(rhs));
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = 17;
+            hash = hash * 31 + Number.GetHashCode();
+            hash = hash * 31 + Suit.GetHashCode();
+            return hash;
+        }
+        #endregion
     }
 }
